@@ -101,7 +101,7 @@ func (client *Client) authorize() (bool, error) {
 }
 
 func (client *Client) getRepositories() ([]Repository, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/engine/v2/repositories", client.Host), nil)
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/api/engine/v2/repositories", client.Host), nil)
 
 	if err != nil {
 		return nil, err
@@ -122,6 +122,66 @@ func (client *Client) getRepositories() ([]Repository, error) {
 	json.Unmarshal([]byte(jsonString), &repositories)
 
 	return repositories, nil
+}
+
+func (client *Client) getRepository(id string) (Repository, error) {
+	var repository Repository
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/api/engine/v2/repositories/%s", client.Host, id), nil)
+
+	if err != nil {
+		return repository, err
+	}
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", client.Token.AccessToken))
+	c := &http.Client{Timeout: 10 * time.Second, Transport: tr}
+	jsonString, err := getJsonString(req, c)
+
+	if err != nil {
+		return repository, err
+	}
+
+	json.Unmarshal([]byte(jsonString), &repository)
+
+	return repository, nil
+}
+
+func (client *Client) createRepository(name string, folder_name string, uri string, repo_type string, description string, branch string, username string, password string) (Repository, error) {
+	var repository Repository
+
+	postBody, _ := json.Marshal(map[string]string{
+		"name":        name,
+		"folder_name": folder_name,
+		"uri":         uri,
+		"repo_type":   repo_type,
+		"description": description,
+		"branch":      branch,
+		"username":    username,
+		"password":    password,
+	})
+
+	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%s/api/engine/v2/repositories", client.Host), bytes.NewBuffer(postBody))
+
+	if err != nil {
+		return repository, err
+	}
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", client.Token.AccessToken))
+	c := &http.Client{Timeout: 10 * time.Second, Transport: tr}
+	jsonString, err := getJsonString(req, c)
+
+	if err != nil {
+		return repository, err
+	}
+
+	json.Unmarshal([]byte(jsonString), &repository)
+
+	return repository, nil
 }
 
 func getJsonString(req *http.Request, c *http.Client) ([]byte, error) {
