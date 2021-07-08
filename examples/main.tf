@@ -8,13 +8,12 @@ terraform {
 }
 
 provider "placeos" {
-  username = "support@place.tech"
-	password =  "development"
-	host =  "https://localhost:8443"
-  client_id = "b52e653071c45353dbff4e8f47d51cdf"
-  client_secret = "288ix5hR8y_lyoNeD0ujd9w35FKjr1FAQySY2CbQ-PDB3tRY1ECZ3w"
-
-  # insecureSsl = false
+  username = var.username
+	password =  var.password
+	host =  var.host
+  client_id = var.client_id
+  client_secret = var.client_secret
+  insecure_ssl = var.insecure_ssl
 }
 
 module "psl" {
