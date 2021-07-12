@@ -184,6 +184,42 @@ func (client *Client) createRepository(name string, folder_name string, uri stri
 	return repository, nil
 }
 
+func (client *Client) updateRepository(repository Repository) (Repository, error) {
+	var repositoryNew Repository
+
+	postBody, _ := json.Marshal(map[string]string{
+		"name":        repository.Name,
+		"folder_name": repository.FolderName,
+		"uri":         repository.Uri,
+		"repo_type":   repository.RepoType,
+		"description": repository.Description,
+		"branch":      repository.Branch,
+		"username":    repository.Username,
+		"password":    repository.Password,
+	})
+
+	req, err := http.NewRequest(http.MethodPatch, fmt.Sprintf("%s/api/engine/v2/repositories/%s", client.Host, repository.Id), bytes.NewBuffer(postBody))
+
+	if err != nil {
+		return repository, err
+	}
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", client.Token.AccessToken))
+	c := &http.Client{Timeout: 10 * time.Second, Transport: tr}
+	jsonString, err := getJsonString(req, c)
+
+	if err != nil {
+		return repository, err
+	}
+
+	json.Unmarshal([]byte(jsonString), &repositoryNew)
+
+	return repositoryNew, nil
+}
+
 func (client *Client) deleteRepository(id string) error {
 	req, err := http.NewRequest(http.MethodDelete, fmt.Sprintf("%s/api/engine/v2/repositories/%s", client.Host, id), nil)
 

@@ -7,7 +7,7 @@ terraform {
   }
 }
 resource "placeos_repository" "random" {
-  name = "new Repository"
+  name = "new Repository 1"
   folder_name = "terraformfolder1"
   uri = "https://github.com/placeos/backoffice"
   repo_type = "interface"

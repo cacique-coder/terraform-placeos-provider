@@ -141,6 +141,56 @@ func resourceRepositoryRead(ctx context.Context, d *schema.ResourceData, m inter
 }
 
 func resourceRepositoryUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	c := m.(*Client)
+	repository, err := c.getRepository(d.Id())
+
+	if d.HasChange("name") {
+		name := d.Get("name").(string)
+		repository.Name = name
+	}
+
+	if d.HasChange("folder_name") {
+		folder_name := d.Get("folder_name").(string)
+		repository.FolderName = folder_name
+	}
+
+	if d.HasChange("uri") {
+		uri := d.Get("uri").(string)
+		repository.Uri = uri
+	}
+
+	if d.HasChange("description") {
+		description := d.Get("description").(string)
+		repository.Description = description
+	}
+
+	if d.HasChange("branch") {
+		branch := d.Get("branch").(string)
+		repository.Branch = branch
+	}
+
+	if d.HasChange("username") {
+		username := d.Get("username").(string)
+		repository.Username = username
+	}
+
+	if d.HasChange("password") {
+		password := d.Get("password").(string)
+		repository.Password = password
+	}
+
+	if d.HasChange("repo_type") {
+		repo_type := d.Get("repo_type").(string)
+		repository.RepoType = repo_type
+	}
+
+	repository2, err := c.updateRepository(repository)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	d.SetId(repository2.Id)
+
 	return resourceRepositoryRead(ctx, d, m)
 }
 
