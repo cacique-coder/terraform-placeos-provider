@@ -20,6 +20,6 @@ module "psl" {
   source = "./repository"
 
 }
-output "repositories" {
-  value = module.psl.all_repositories
-}
+# output "repositories" {
+#   value = module.psl.all_repositories
+# }

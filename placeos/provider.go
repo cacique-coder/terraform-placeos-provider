@@ -50,9 +50,11 @@ func Provider() *schema.Provider {
 				DefaultFunc: schema.EnvDefaultFunc("PLACEOS_CLIENT_INSECURE_SSL", false),
 			},
 		},
-		ResourcesMap: map[string]*schema.Resource{},
+		ResourcesMap: map[string]*schema.Resource{
+			"placeos_repository": resourceRepository(),
+		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"placeos_repository": dataSourceRepository(),
+			"placeos_repositories": dataSourceRepository(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}

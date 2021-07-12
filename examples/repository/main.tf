@@ -6,10 +6,14 @@ terraform {
     }
   }
 }
-data "placeos_repository" "all" {
+resource "placeos_repository" "random" {
+  name = "new Repository 1"
+  folder_name = "terraformfolder1"
+  uri = "https://github.com/placeos/backoffice"
+  repo_type = "interface"
 }
 
 # Returns all repositories
-output "all_repositories" {
-  value = data.placeos_repository.all.repositories
-}
+# output "all_repositories" {
+#   value = data.placeos_repositories.all.repositories
+# }
