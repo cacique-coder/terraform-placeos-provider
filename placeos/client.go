@@ -184,6 +184,28 @@ func (client *Client) createRepository(name string, folder_name string, uri stri
 	return repository, nil
 }
 
+func (client *Client) deleteRepository(id string) error {
+	req, err := http.NewRequest(http.MethodDelete, fmt.Sprintf("%s/api/engine/v2/repositories/%s", client.Host, id), nil)
+
+	if err != nil {
+		return err
+	}
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", client.Token.AccessToken))
+	c := &http.Client{Timeout: 10 * time.Second, Transport: tr}
+	r, err := c.Do(req)
+
+	if err != nil {
+		return err
+	}
+	defer r.Body.Close()
+
+	return nil
+}
+
 func getJsonString(req *http.Request, c *http.Client) ([]byte, error) {
 	r, err := c.Do(req)
 	if err != nil {

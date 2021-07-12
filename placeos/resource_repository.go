@@ -146,7 +146,16 @@ func resourceRepositoryUpdate(ctx context.Context, d *schema.ResourceData, m int
 
 func resourceRepositoryDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	// Warning or errors can be collected in a slice type
+	c := m.(*Client)
 	var diags diag.Diagnostics
 
+	id := d.Get("id").(string)
+
+	err := c.deleteRepository(id)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	d.SetId("")
 	return diags
 }
