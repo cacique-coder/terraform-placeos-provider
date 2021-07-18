@@ -37,6 +37,7 @@ func resourceRepository() *schema.Resource {
 			"branch": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
+				Default:  "master",
 			},
 			"username": &schema.Schema{
 				Type:     schema.TypeString,

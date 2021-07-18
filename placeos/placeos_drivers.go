@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -15,15 +16,15 @@ import (
 // 3  : websocket
 // 1  : device
 type Driver struct {
-	CreatedAt        int64 `json:"created_at"`
-	UpdatedAt        int64 `json:"updated_at"`
-	Id               string
-	Name             string
-	Description      string
+	CreatedAt        int64  `json:"created_at"`
+	UpdatedAt        int64  `json:"updated_at"`
+	Id               string `json:"id"`
+	Name             string `json:"name"`
+	Description      string `json:"description"`
 	FileName         string `json:"file_name"`
-	DefaultUri       string
+	DefaultUri       string `json:"default_uri"`
 	Commit           string `json:"commit"`
-	Role             int
+	Role             int    `json:"role"`
 	ModuleName       string `json:"module_name"`
 	RepositoryId     string `json:"repository_id"`
 	IgnoredConnected bool   `json:"ignore_connected"`
@@ -56,10 +57,7 @@ func (client *Client) getDriver(id string) (Driver, error) {
 // create driver with driver parameters
 
 func (client *Client) createDriver(name string, description string, file_name string, default_uri string, module_name string, repository_id string, commit string, role int, ignore_connected bool) (Driver, error) {
-	var driver Driver
-
-	// load driver with input parameters
-	driver = Driver{
+	var driver = Driver{
 		Name:             name,
 		Description:      description,
 		FileName:         file_name,
@@ -97,20 +95,25 @@ func (client *Client) createDriver(name string, description string, file_name st
 }
 
 // updates a driver in placeos when the parameter is the driver instance
-func (client *Client) updateDriver(driver Driver) error {
-	postBody, _ := json.Marshal(map[string]string{
-		"name":             driver.Name,
-		"description":      driver.Description,
-		"file_name":        driver.FileName,
-		"default_uri":      driver.DefaultUri,
-		"commit":           driver.Commit,
-		"role":             fmt.Sprintf("%d", driver.Role),
-		"module_name":      driver.ModuleName,
-		"repository_id":    driver.RepositoryId,
-		"ignore_connected": fmt.Sprintf("%t", driver.IgnoredConnected),
-	})
+func (client *Client) updateDriver(id string, name string, description string, file_name string, default_uri string, module_name string, repository_id string, commit string, role int, ignore_connected bool, created_at int64, updated_at int64) error {
+	var driver = Driver{
+		Id:               id,
+		Name:             name,
+		Description:      description,
+		FileName:         file_name,
+		DefaultUri:       default_uri,
+		Role:             role,
+		ModuleName:       module_name,
+		RepositoryId:     repository_id,
+		Commit:           commit,
+		IgnoredConnected: ignore_connected,
+		CreatedAt:        created_at,
+		UpdatedAt:        updated_at,
+	}
 
-	req, err := http.NewRequest(http.MethodPut, fmt.Sprintf("%s/api/engine/v2/drivers/%s", client.Host, driver.Id), bytes.NewBuffer(postBody))
+	postBody, _ := json.Marshal(driver)
+
+	req, err := http.NewRequest(http.MethodPatch, fmt.Sprintf("%s/api/engine/v2/drivers/%s", client.Host, driver.Id), bytes.NewBuffer(postBody))
 
 	if err != nil {
 		return err
@@ -122,6 +125,14 @@ func (client *Client) updateDriver(driver Driver) error {
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", client.Token.AccessToken))
 	c := &http.Client{Timeout: 10 * time.Second, Transport: tr}
 	jsonString, err := getJsonString(req, c)
+
+	// print json to a file
+	file, err := os.Create("/tmp/patch.json")
+	if err != nil {
+		return err
+	}
+	file.Write(postBody)
+	file.Close()
 
 	if err != nil {
 		return err

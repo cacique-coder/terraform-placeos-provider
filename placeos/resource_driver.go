@@ -2,6 +2,8 @@ package placeos
 
 import (
 	"context"
+	"encoding/json"
+	"os"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -76,11 +78,15 @@ func resourceDriverCreate(ctx context.Context, d *schema.ResourceData, m interfa
 	description := d.Get("description").(string)
 	file_name := d.Get("file_name").(string)
 	default_uri := d.Get("default_uri").(string)
-	commit := d.Get("commit").(string)
 	role := d.Get("role").(int)
 	module_name := d.Get("module_name").(string)
 	repository_id := d.Get("repository_id").(string)
 	ignore_connected := d.Get("ignored_connected").(bool)
+	commit, err := c.getLastCommitHash(repository_id, file_name)
+
+	if err != nil {
+		return diag.FromErr(err)
+	}
 
 	driver, err := c.createDriver(name, description, file_name, default_uri, module_name, repository_id, commit, role, ignore_connected)
 
@@ -123,11 +129,31 @@ func resourceDriverUpdate(ctx context.Context, d *schema.ResourceData, m interfa
 	c := m.(*Client)
 	id := d.Get("id").(string)
 	driver, err := c.getDriver(id)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	file, err := os.Create("/tmp/driver.json")
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	text, err := json.Marshal(driver)
+
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	file.Write(text)
+	file.Close()
 
 	if err != nil {
 		return diag.FromErr(err)
 	}
 	// check each field has change and replace it if it has
+
+	if d.HasChange("created_at") {
+		driver.CreatedAt = d.Get("created_at").(int64)
+	}
 	if d.HasChange("name") {
 		driver.Name = d.Get("name").(string)
 	}
@@ -147,7 +173,10 @@ func resourceDriverUpdate(ctx context.Context, d *schema.ResourceData, m interfa
 		driver.RepositoryId = d.Get("repository_id").(string)
 	}
 	if d.HasChange("commit") {
-		driver.Commit = d.Get("commit").(string)
+		driver.Commit, err = c.getLastCommitHash(driver.RepositoryId, driver.FileName)
+		if err != nil {
+			return diag.FromErr(err)
+		}
 	}
 	if d.HasChange("role") {
 		driver.Role = d.Get("role").(int)
@@ -156,8 +185,33 @@ func resourceDriverUpdate(ctx context.Context, d *schema.ResourceData, m interfa
 		driver.IgnoredConnected = d.Get("ignored_connected").(bool)
 	}
 
-	// update driver
-	err = c.updateDriver(driver)
+	file2, err := os.Create("/tmp/driver2.json")
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	tex2, err := json.Marshal(driver)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	file2.Write(tex2)
+	file2.Close()
+
+	err = c.updateDriver(
+		driver.Id,
+		driver.Name,
+		driver.Description,
+		driver.FileName,
+		driver.DefaultUri,
+		driver.ModuleName,
+		driver.RepositoryId,
+		driver.Commit,
+		driver.Role,
+		driver.IgnoredConnected,
+		driver.CreatedAt,
+		driver.UpdatedAt,
+	)
 	if err != nil {
 		return diag.FromErr(err)
 	}

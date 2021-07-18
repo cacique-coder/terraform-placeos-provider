@@ -11,12 +11,13 @@ resource "placeos_repository" "public_drivers" {
   folder_name = "terraformfolder2"
   uri = "https://github.com/placeos/drivers"
   repo_type = "driver"
+  branch = "master"
 }
 
 resource "placeos_driver" "placeos_staff_api" {
   name = "placeos_staff_api"
   file_name = "drivers/place/staff_api.cr"
-  description = "Staff api"
+  description = "Staff api 5"
   role = 1
   module_name = "Staff_API"
   default_uri = "https://nginx"

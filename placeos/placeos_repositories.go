@@ -24,6 +24,13 @@ type Repository struct {
 	RepoType    string `json:"repo_type"`
 }
 
+type Commit struct {
+	Commit  string `json:"commit"`
+	Date    string `json:"date"`
+	Author  string `json:"author"`
+	Subject string `json:"subject"`
+}
+
 func (client *Client) getRepositories() ([]Repository, error) {
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/api/engine/v2/repositories", client.Host), nil)
 
@@ -164,4 +171,31 @@ func (client *Client) deleteRepository(id string) error {
 	defer r.Body.Close()
 
 	return nil
+}
+
+// Pulling last commit hash from a repository
+func (client *Client) getLastCommitHash(repository_id string, driver_file_name string) (string, error) {
+	// make a get request to commits in a repository with a query string
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/api/engine/v2/repositories/%s/commits?driver=%s", client.Host, repository_id, driver_file_name), nil)
+
+	if err != nil {
+		return "", err
+	}
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", client.Token.AccessToken))
+	c := &http.Client{Timeout: 10 * time.Second, Transport: tr}
+	jsonString, err := getJsonString(req, c)
+
+	if err != nil {
+		return "", err
+	}
+
+	// Parsing json into and array of commits
+	var commits []Commit
+	json.Unmarshal([]byte(jsonString), &commits)
+	// Get last commit hash
+	return commits[0].Commit, nil
 }
