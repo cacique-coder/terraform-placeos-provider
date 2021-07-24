@@ -23,3 +23,13 @@ resource "placeos_driver" "placeos_staff_api" {
   default_uri = "https://nginx"
   repository_id = placeos_repository.public_drivers.id
 }
+
+resource "placeos_setting" "place_staff_api_unencrypted" {
+  parent_id = placeos_driver.placeos_staff_api.id
+  parent_type = "driver"
+  encryption_level = 0
+  settings_string = "q: 1"
+  keys = [
+    "q"
+  ]
+}
