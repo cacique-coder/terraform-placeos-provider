@@ -66,7 +66,7 @@ func (client *Client) authorize() (bool, error) {
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 
-	c := &http.Client{Timeout: 10 * time.Second, Transport: tr}
+	c := &http.Client{Timeout: 100 * time.Second, Transport: tr}
 
 	r, err := c.Do(req)
 	if err != nil {

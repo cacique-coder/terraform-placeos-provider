@@ -25,6 +25,7 @@ func resourceRepository() *schema.Resource {
 			"uri": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"repo_type": &schema.Schema{
 				Type:     schema.TypeString,
