@@ -5,6 +5,6 @@ provider "hashicorp.com/edu/placeos" {
   version     = "0.2.0"
   constraints = "0.2.0"
   hashes = [
-    "h1:eX6v385AJqvQI4uhHQ12ja7S8zOTUQi1Aq4i1xpZqEw=",
+    "h1:7c4Ry4d+4wUr2BeZV7p+fBz2HATfQ/inhhpitPsVu3U=",
   ]
 }
