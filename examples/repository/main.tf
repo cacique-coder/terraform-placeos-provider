@@ -32,3 +32,20 @@ resource "placeos_module" "placeos_module_staff_api" {
   uri = "https://nginx"
   driver_id = placeos_driver.placeos_staff_api.id
 }
+
+resource "placeos_setting" "driver_setting_staff_api" {
+  parent_type = "Driver"
+  parent_id = placeos_driver.placeos_staff_api.id
+  keys = ["name"]
+  settings_string = "{\"name\":\"daniel\"}"
+  encryption_level = "1"
+}
+
+
+resource "placeos_setting" "module_setting_staff_api" {
+  parent_type = "Module"
+  parent_id = placeos_module.placeos_module_staff_api.id
+  keys = ["last_name"]
+  settings_string = "{\"last_name\":\"daniel\"}"
+  encryption_level = "1"
+}
