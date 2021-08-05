@@ -42,7 +42,7 @@ func (client *Client) getRepositories() ([]Repository, error) {
 	}
 
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", client.Token.AccessToken))
-	c := &http.Client{Timeout: 10 * time.Second, Transport: tr}
+	c := &http.Client{Timeout: 100 * time.Second, Transport: tr}
 	jsonString, err := getJsonString(req, c)
 
 	if err != nil {
@@ -67,7 +67,7 @@ func (client *Client) getRepository(id string) (Repository, error) {
 	}
 
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", client.Token.AccessToken))
-	c := &http.Client{Timeout: 10 * time.Second, Transport: tr}
+	c := &http.Client{Timeout: 100 * time.Second, Transport: tr}
 	jsonString, err := getJsonString(req, c)
 
 	if err != nil {
@@ -103,7 +103,7 @@ func (client *Client) createRepository(name string, folder_name string, uri stri
 	}
 
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", client.Token.AccessToken))
-	c := &http.Client{Timeout: 10 * time.Second, Transport: tr}
+	c := &http.Client{Timeout: 100 * time.Second, Transport: tr}
 	jsonString, err := getJsonString(req, c)
 
 	if err != nil {
@@ -139,7 +139,7 @@ func (client *Client) updateRepository(repository Repository) (Repository, error
 	}
 
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", client.Token.AccessToken))
-	c := &http.Client{Timeout: 10 * time.Second, Transport: tr}
+	c := &http.Client{Timeout: 100 * time.Second, Transport: tr}
 	jsonString, err := getJsonString(req, c)
 
 	if err != nil {
@@ -162,7 +162,7 @@ func (client *Client) deleteRepository(id string) error {
 	}
 
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", client.Token.AccessToken))
-	c := &http.Client{Timeout: 10 * time.Second, Transport: tr}
+	c := &http.Client{Timeout: 100 * time.Second, Transport: tr}
 	r, err := c.Do(req)
 
 	if err != nil {
@@ -186,7 +186,7 @@ func (client *Client) getLastCommitHash(repository_id string, driver_file_name s
 	}
 
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", client.Token.AccessToken))
-	c := &http.Client{Timeout: 10 * time.Second, Transport: tr}
+	c := &http.Client{Timeout: 100 * time.Second, Transport: tr}
 	jsonString, err := getJsonString(req, c)
 
 	if err != nil {

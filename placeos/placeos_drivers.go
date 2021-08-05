@@ -42,7 +42,7 @@ func (client *Client) getDriver(id string) (Driver, error) {
 	}
 
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", client.Token.AccessToken))
-	c := &http.Client{Timeout: 10 * time.Second, Transport: tr}
+	c := &http.Client{Timeout: 100 * time.Second, Transport: tr}
 	jsonString, err := getJsonString(req, c)
 
 	if err != nil {
@@ -82,7 +82,7 @@ func (client *Client) createDriver(name string, description string, file_name st
 	}
 
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", client.Token.AccessToken))
-	c := &http.Client{Timeout: 10 * time.Second, Transport: tr}
+	c := &http.Client{Timeout: 300 * time.Second, Transport: tr}
 	jsonString, err := getJsonString(req, c)
 
 	if err != nil {
@@ -123,7 +123,7 @@ func (client *Client) updateDriver(id string, name string, description string, f
 	}
 
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", client.Token.AccessToken))
-	c := &http.Client{Timeout: 10 * time.Second, Transport: tr}
+	c := &http.Client{Timeout: 100 * time.Second, Transport: tr}
 	jsonString, err := getJsonString(req, c)
 
 	// print json to a file
@@ -155,7 +155,7 @@ func (client *Client) deleteDriver(id string) error {
 	}
 
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", client.Token.AccessToken))
-	c := &http.Client{Timeout: 10 * time.Second, Transport: tr}
+	c := &http.Client{Timeout: 100 * time.Second, Transport: tr}
 	_, err = c.Do(req)
 
 	if err != nil {

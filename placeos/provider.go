@@ -54,6 +54,7 @@ func Provider() *schema.Provider {
 			"placeos_repository": resourceRepository(),
 			"placeos_driver":     resourceDriver(),
 			"placeos_setting":    resourceSetting(),
+			"placeos_module":     resourceModule(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"placeos_repositories": dataSourceRepository(),
