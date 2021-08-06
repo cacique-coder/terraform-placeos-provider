@@ -49,3 +49,14 @@ resource "placeos_setting" "module_setting_staff_api" {
   settings_string = "{\"last_name\":\"daniel\"}"
   encryption_level = "1"
 }
+
+resource "placeos_zone" "terraform_basement" {
+  name = "Terraform Basement"
+}
+
+
+resource "placeos_zone" "terraform_p1" {
+  name = "Terraform p1"
+  parent_id = placeos_zone.terraform_basement.id
+  tags = ["p1"]
+}

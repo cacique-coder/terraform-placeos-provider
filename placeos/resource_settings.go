@@ -166,7 +166,7 @@ func resourceSettingDelete(ctx context.Context, d *schema.ResourceData, m interf
 	var diags diag.Diagnostics
 
 	id := d.Get("id").(string)
-	err := c.deleteDriver(id)
+	err := c.deleteSetting(id)
 
 	if err != nil {
 		return diag.FromErr(err)

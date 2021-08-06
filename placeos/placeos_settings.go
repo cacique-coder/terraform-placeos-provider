@@ -9,25 +9,6 @@ import (
 	"time"
 )
 
-// Role values
-// 99 : Logic
-// 2  : service
-// 3  : websocket
-// 1  : device
-
-// // {
-//   "id": "sets-HjI~xeEP_Md",
-//   "name": "",
-//   "created_at": 1626781157,
-//   "updated_at": 1626781157,
-//   "version": 0,
-//   "parent_id": "driver-HAvHh-3XZUs",
-//   "settings_string": "q: 2",
-//   "encryption_level": 0,
-//   "keys": [
-//     "q"
-//   ]
-// }
 type Setting struct {
 	Id              string   `json:"id"`
 	Name            string   `json:"name"`
