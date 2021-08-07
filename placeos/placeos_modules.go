@@ -111,11 +111,13 @@ func (client *Client) updateModule(moduleParams Module) (Module, error) {
 		Notes:           moduleParams.Notes,
 		IgnoreConnected: moduleParams.IgnoreConnected,
 		DriverId:        moduleParams.DriverId,
+		CustomName:      moduleParams.CustomName,
 	}
 
 	file, err := os.Create("/tmp/module.json")
 
 	postBody, _ := json.Marshal(module)
+	file.Write(postBody)
 
 	req, err := http.NewRequest(http.MethodPatch, fmt.Sprintf("%s/api/engine/v2/modules/%s", client.Host, moduleParams.Id), bytes.NewBuffer(postBody))
 

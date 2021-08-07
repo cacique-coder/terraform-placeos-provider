@@ -17,6 +17,7 @@ func resourceModule() *schema.Resource {
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"custom_name": {
 				Type:     schema.TypeString,
@@ -48,6 +49,8 @@ func resourceModule() *schema.Resource {
 			"tls": {
 				Type:     schema.TypeBool,
 				Optional: true,
+				Default:  false,
+				ForceNew: true,
 			},
 			"udp": {
 				Type:     schema.TypeBool,
@@ -154,6 +157,12 @@ func resourceModuleUpdate(ctx context.Context, d *schema.ResourceData, m interfa
 		name := d.Get("name").(string)
 		module.Name = name
 	}
+
+	if d.HasChange("custom_name") {
+		custom_name := d.Get("custom_name").(string)
+		module.CustomName = custom_name
+	}
+
 	if d.HasChange("ip") {
 		ip := d.Get("ip").(string)
 		module.Ip = ip
@@ -185,10 +194,6 @@ func resourceModuleUpdate(ctx context.Context, d *schema.ResourceData, m interfa
 	if d.HasChange("ignore_start_stop") {
 		ignore_start_stop := d.Get("ignore_start_stop").(bool)
 		module.IgnoreStartStop = ignore_start_stop
-	}
-	if d.HasChange("custom_name") {
-		custom_name := d.Get("custom_name").(string)
-		module.CustomName = custom_name
 	}
 	if d.HasChange("notes") {
 		notes := d.Get("notes").(string)
