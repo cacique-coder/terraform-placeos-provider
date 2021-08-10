@@ -23,6 +23,7 @@ func resourceSetting() *schema.Resource {
 			"parent_id": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"keys": &schema.Schema{
 				Type: schema.TypeList,
@@ -70,7 +71,7 @@ func resourceSettingCreate(ctx context.Context, d *schema.ResourceData, m interf
 		keys[i] = v.(string)
 	}
 
-	setting, err := c.createSetting("", parent_id, parent_type, setting_string, encryption_level, keys)
+	setting, err := c.CreateSetting("", parent_id, parent_type, setting_string, encryption_level, keys)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -89,6 +90,7 @@ func resourceSettingRead(ctx context.Context, d *schema.ResourceData, m interfac
 	if err != nil {
 		return diag.FromErr(err)
 	}
+
 	d.Set("name", setting.Name)
 	d.Set("parent_type", setting.ParentType)
 	d.Set("parent_id", setting.ParentId)

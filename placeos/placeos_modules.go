@@ -55,9 +55,8 @@ func (client *Client) getModule(id string) (Module, error) {
 	return module, nil
 }
 
-func (client *Client) createModule(ip string, driverId string, name string, uri string, port int, tlsModule bool, udp bool, makebreak bool, customName string, notes string, ignore_connected bool) (Module, error) {
+func (client *Client) createModule(ip string, driverId string, uri string, port int, tlsModule bool, udp bool, makebreak bool, customName string, notes string, ignore_connected bool) (Module, error) {
 	var module = Module{
-		Name:       name,
 		Uri:        uri,
 		Port:       port,
 		Tls:        tlsModule,
@@ -102,7 +101,6 @@ func (client *Client) createModule(ip string, driverId string, name string, uri 
 // updates a driver in placeos when the parameter is the driver instance
 func (client *Client) updateModule(moduleParams Module) (Module, error) {
 	var module = Module{
-		Name:            moduleParams.Name,
 		Uri:             moduleParams.Uri,
 		Port:            moduleParams.Port,
 		Tls:             moduleParams.Tls,
@@ -114,7 +112,7 @@ func (client *Client) updateModule(moduleParams Module) (Module, error) {
 		CustomName:      moduleParams.CustomName,
 	}
 
-	file, err := os.Create("/tmp/module.json")
+	file, err := os.Create("/tmp/module-patch.json")
 
 	postBody, _ := json.Marshal(module)
 	file.Write(postBody)

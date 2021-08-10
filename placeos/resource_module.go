@@ -14,11 +14,6 @@ func resourceModule() *schema.Resource {
 		UpdateContext: resourceModuleUpdate,
 		DeleteContext: resourceModuleDelete,
 		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-			},
 			"custom_name": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -45,20 +40,12 @@ func resourceModule() *schema.Resource {
 			"port": {
 				Type:     schema.TypeInt,
 				Optional: true,
-			},
-			"tls": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Default:  false,
-				ForceNew: true,
-			},
-			"udp": {
-				Type:     schema.TypeBool,
-				Optional: true,
+				Default:  0,
 			},
 			"makebreak": {
 				Type:     schema.TypeBool,
 				Optional: true,
+				Default:  false,
 			},
 			"ignore_connected": {
 				Type:     schema.TypeBool,
@@ -69,6 +56,14 @@ func resourceModule() *schema.Resource {
 				Type:     schema.TypeBool,
 				Optional: true,
 				Default:  false,
+			},
+			"tls": {
+				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"udp": {
+				Type:     schema.TypeBool,
+				Computed: true,
 			},
 			"id": {
 				Type:     schema.TypeString,
@@ -98,12 +93,11 @@ func resourceModuleCreate(ctx context.Context, d *schema.ResourceData, m interfa
 	udp := d.Get("udp").(bool)
 	makebreak := d.Get("makebreak").(bool)
 	uri := d.Get("uri").(string)
-	name := d.Get("name").(string)
 	customName := d.Get("custom_name").(string)
 	notes := d.Get("notes").(string)
 	ignore_connected := d.Get("ignore_connected").(bool)
 
-	module, err := c.createModule(ip, driverId, name, uri, port, tls, udp, makebreak, customName, notes, ignore_connected)
+	module, err := c.createModule(ip, driverId, uri, port, tls, udp, makebreak, customName, notes, ignore_connected)
 
 	if err != nil {
 		return diag.FromErr(err)
@@ -153,10 +147,6 @@ func resourceModuleUpdate(ctx context.Context, d *schema.ResourceData, m interfa
 	}
 
 	module.Id = d.Id()
-	if d.HasChange("name") {
-		name := d.Get("name").(string)
-		module.Name = name
-	}
 
 	if d.HasChange("custom_name") {
 		custom_name := d.Get("custom_name").(string)
