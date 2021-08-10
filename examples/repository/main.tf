@@ -45,11 +45,9 @@ resource "placeos_driver" "smtp" {
 }
 
 resource "placeos_module" "placeos_module_staff_api" {
-  name = "Terraform_placeos_staff_apiX"
-  custom_name = "Terraform_placeos_staff_apiX"
+  custom_name = "TerraformStaffApi"
   uri = "https://nginx"
   driver_id = placeos_driver.placeos_staff_api.id
-  tls = false
 }
 
 resource "placeos_setting" "driver_setting_staff_api" {
@@ -71,6 +69,7 @@ resource "placeos_setting" "module_setting_staff_api" {
 
 resource "placeos_zone" "terraform_basement" {
   name = "Terraform Basement"
+  tags = []
 }
 
 

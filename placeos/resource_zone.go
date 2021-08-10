@@ -20,6 +20,13 @@ func resourceZone() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			"tags": {
+				Type: schema.TypeList,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Required: true,
+			},
 			"description": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -65,15 +72,6 @@ func resourceZone() *schema.Resource {
 				Optional: true,
 				Default:  nil,
 			},
-			"tags": {
-				Type: schema.TypeList,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Optional: true,
-				Default:  nil,
-			},
-
 			"id": {
 				Type:     schema.TypeString,
 				Computed: true,

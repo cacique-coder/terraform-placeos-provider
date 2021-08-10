@@ -48,7 +48,7 @@ func (client *Client) getSetting(id string) (Setting, error) {
 
 // create driver with driver parameters
 
-func (client *Client) createSetting(name string, parent_id string, parent_type string, settings_string string, encryption_level int, keys []string) (Setting, error) {
+func (client *Client) CreateSetting(name string, parent_id string, parent_type string, settings_string string, encryption_level int, keys []string) (Setting, error) {
 	var setting = Setting{
 		Name:            name,
 		ParentId:        parent_id,

@@ -45,6 +45,7 @@ func dataSourceRepository() *schema.Resource {
 						"commit_hash": &schema.Schema{
 							Type:     schema.TypeString,
 							Computed: true,
+							Optional: true,
 						},
 						"branch": &schema.Schema{
 							Type:     schema.TypeString,
