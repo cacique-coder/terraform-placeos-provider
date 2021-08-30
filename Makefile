@@ -35,3 +35,10 @@ test:
 
 testacc:
 	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m
+
+tools:
+	go generate -tags tools tools/tools.go
+
+
+docs: tools
+	@sh -c "'$(CURDIR)/scripts/generate-docs.sh'"
