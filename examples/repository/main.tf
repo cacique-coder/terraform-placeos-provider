@@ -2,7 +2,7 @@ terraform {
   required_providers {
     placeos = {
       version = "0.2"
-      source  = "hashicorp.com/edu/placeos"
+      source  = "placeos.tech/edu/placeos"
     }
   }
 }

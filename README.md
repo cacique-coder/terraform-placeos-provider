@@ -16,8 +16,8 @@ First, build and install the provider.
 
 ```shell
 make install
-go build -o terraform-provider-hashicups
-mv terraform-provider-hashicups ~/.terraform.d/plugins/hashicorp.com/edu/hashicups/0.2/darwin_amd64
+go build -o terraform-provider-placeos
+mv terraform-provider-placeos ~/.terraform.d/plugins/placeos.tech/edu/placeos/0.2/darwin_amd64
 ```
 
 Then, run the following command to initialize the workspace and apply the sample configuration.
