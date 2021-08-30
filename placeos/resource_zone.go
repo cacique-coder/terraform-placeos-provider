@@ -15,6 +15,10 @@ func resourceZone() *schema.Resource {
 		ReadContext:   resourceZoneRead,
 		UpdateContext: resourceZoneUpdate,
 		DeleteContext: resourceZoneDelete,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
+
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:     schema.TypeString,

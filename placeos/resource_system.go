@@ -13,6 +13,10 @@ func resourceSystem() *schema.Resource {
 		ReadContext:   resourceSystemRead,
 		UpdateContext: resourceSystemUpdate,
 		DeleteContext: resourceSystemDelete,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
+
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:     schema.TypeString,

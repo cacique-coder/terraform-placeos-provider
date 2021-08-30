@@ -15,6 +15,9 @@ func resourceDriver() *schema.Resource {
 		ReadContext:   resourceDriverRead,
 		UpdateContext: resourceDriverUpdate,
 		DeleteContext: resourceDriverDelete,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
 				Type:     schema.TypeString,

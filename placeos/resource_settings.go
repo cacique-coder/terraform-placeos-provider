@@ -15,6 +15,10 @@ func resourceSetting() *schema.Resource {
 		ReadContext:   resourceSettingRead,
 		UpdateContext: resourceSettingUpdate,
 		DeleteContext: resourceSettingDelete,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
+
 		Schema: map[string]*schema.Schema{
 			"parent_type": &schema.Schema{
 				Type:     schema.TypeString,

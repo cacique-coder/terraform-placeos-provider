@@ -13,6 +13,10 @@ func resourceModule() *schema.Resource {
 		ReadContext:   resourceModuleRead,
 		UpdateContext: resourceModuleUpdate,
 		DeleteContext: resourceModuleDelete,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
+
 		Schema: map[string]*schema.Schema{
 			"custom_name": {
 				Type:     schema.TypeString,
